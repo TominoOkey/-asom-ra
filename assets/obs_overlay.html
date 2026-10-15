@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Časomíra OBS</title>
+<style>
+/* OBS_CSS */
+</style>
+</head>
+<body>
+
+<main id="app" class="stage">
+  <section id="panel" class="obs-panel state-next">
+    <header class="panel-header">
+      <div>
+        <div id="panelTitle" class="main-title"></div>
+        <div id="panelSub" class="sub-title"></div>
+      </div>
+      <div id="panelPhase" class="phase-badge"></div>
+    </header>
+    <div id="columnHead" class="column-head">
+      <span>Dráha</span><span>Klub</span><span>Jméno</span><span id="columnTimeLabel">Přihlášený čas</span>
+    </div>
+    <div id="panelRows" class="panel-rows"></div>
+  </section>
+
+  <aside id="clockBug" class="clock-bug">
+    <div>
+      <div id="bugEvent" class="bug-event"></div>
+      <div id="bugSub" class="bug-sub"></div>
+    </div>
+    <div id="clock" class="bug-clock">00,00</div>
+  </aside>
+</main>
+
+<script>
+<!-- OBS_SCRIPT -->
+</script>
+</body>
+</html>

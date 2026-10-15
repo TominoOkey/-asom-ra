@@ -1,0 +1,140 @@
+/* STAV: LIVE (Levý roh, zmenšená živá karta) */
+.obs-panel.state-live {
+  top:2.5%;
+  left:2.5%;
+  transform:translate(0,0) scale(1);
+  width:min(29vw,520px);
+  min-width:360px;
+  max-height:95vh;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+.obs-panel.state-live .panel-header {
+  display:none;
+}
+.obs-panel.state-live .main-title {
+  font-size:16px;
+}
+.obs-panel.state-live .sub-title {
+  display:none;
+}
+.phase-badge {
+  display:none;
+  color:var(--accent-bright);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.08em;
+}
+.obs-panel.state-live .phase-badge {
+  display:block;
+}
+.obs-panel.state-live .column-head {
+  display:none;
+}
+.obs-panel.state-live .panel-rows {
+  padding:0;
+  background:transparent;
+  gap:6px;
+}
+/* Samostatné živé řádky (Live) */
+.live-row-item {
+  min-height:43px;
+  display:grid;
+  grid-template-columns:38px minmax(0,1fr) auto;
+  align-items:center;
+  gap:7px;
+  padding:4px 9px;
+  border:0;
+  border-left:4px solid var(--accent);
+  border-radius:4px;
+  margin:0;
+  background:linear-gradient(90deg,rgba(10,15,25,.9),rgba(20,35,50,.78));
+  box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+.live-lane {
+  font-size:22px;
+  font-weight:750;
+  line-height:1;
+  color:var(--accent);
+  font-variant-numeric:tabular-nums;
+}
+.live-identity {
+  min-width:0;
+}
+.live-swimmer {
+  font-size:15px;
+  font-weight:680;
+  line-height:1.2;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.live-club-text {
+  font-size:10px;
+  line-height:1.2;
+  color:var(--muted);
+  letter-spacing:.035em;
+}
+.live-value {
+  font-size:16px;
+  font-weight:700;
+  color:var(--accent-bright);
+  white-space:nowrap;
+}
+.live-time {
+  font-size:17px;
+  font-variant-numeric:tabular-nums;
+  color:white;
+}
+/* Časomíra / Clock bug vpravo dole */
+.clock-bug {
+  position:absolute;
+  right:3.5%;
+  bottom:4.5%;
+  min-width:440px;
+  min-height:68px;
+  padding:10px 16px;
+  display:flex;
+  align-items:center;
+  gap:18px;
+  background:rgba(5,10,15,.94);
+  border-right:6px solid var(--accent);
+  border-radius:4px;
+  box-shadow:0 8px 28px rgba(0,0,0,.15);
+  opacity:0;
+  transform:translateY(25px);
+  pointer-events:none;
+  transition:opacity .5s ease,transform .75s cubic-bezier(.2,.85,.25,1);
+}
+.clock-bug.visible {
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
+}
+.bug-event {
+  font-size:18px;
+  font-weight:750;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+.bug-sub {
+  margin-top:3px;
+  font-size:12px;
+  color:#adc0ce;
+  letter-spacing:.025em;
+}
+.bug-clock {
+  margin-left:auto;
+  font-size:30px;
+  font-weight:800;
+  color:#fff;
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum" 1;
+  white-space:nowrap;
+  min-width:8ch;
+  text-align:right;
+  font-family:Consolas,"SFMono-Regular",monospace;
+}

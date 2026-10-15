@@ -1,0 +1,80 @@
+:root {
+  color-scheme:dark;
+  font-family:"Segoe UI",Verdana,Inter,Arial,sans-serif;
+  --panel:rgba(10,20,30,.985);
+  --panel-row:rgba(15,25,35,.94);
+  --accent:#00d4ff;
+  --accent-bright:#00d4ff;
+  --result:#00ff7f;
+  --ink:#fff;
+  --muted:#aaa;
+  --rule:rgba(148,180,199,.24)
+}
+* {
+  box-sizing:border-box
+}
+html,body {
+  width:100%;
+  height:100%;
+  margin:0;
+  overflow:hidden;
+  background:transparent!important;
+  color:#f6f9fc
+}
+body {
+  position:relative
+}
+.stage {
+  position:absolute;
+  inset:0;
+  background:transparent;
+  display:block;
+  overflow:visible;
+  transform-style:preserve-3d
+}
+#app {
+  perspective:1800px;
+  perspective-origin:50% 50%;
+  transform-style:preserve-3d;
+  transition:opacity .55s ease
+}
+/* Plynulý morphingový panel pro všechny stavy */
+.obs-panel {
+  position:absolute;
+  background:var(--panel);
+  box-shadow:0 18px 64px rgba(0,0,0,.3);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  transform-style:preserve-3d;
+  backface-visibility:hidden;
+  will-change:top,left,width,height,transform,padding,border-radius;
+  transition:
+  top 1.55s cubic-bezier(.22,1,.36,1),
+  left 1.55s cubic-bezier(.22,1,.36,1),
+  width 1.55s cubic-bezier(.22,1,.36,1),
+  height 1.55s cubic-bezier(.22,1,.36,1),
+  padding 1.55s cubic-bezier(.22,1,.36,1),
+  border-radius 1.55s cubic-bezier(.22,1,.36,1),
+  border-top-width 1.55s cubic-bezier(.22,1,.36,1),
+  box-shadow 1.55s cubic-bezier(.22,1,.36,1),
+  filter 1.55s cubic-bezier(.22,1,.36,1);
+}
+.obs-panel::after {
+  content:"";
+  position:absolute;
+  z-index:5;
+  inset:0;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .45s ease
+}
+.obs-panel.cube-out::after {
+  opacity:1;
+  background:linear-gradient(90deg,transparent 42%,rgba(0,0,0,.12) 66%,rgba(0,0,0,.78) 100%),linear-gradient(180deg,rgba(255,255,255,.12),transparent 35%,rgba(0,0,0,.16))
+}
+.obs-panel.cube-in::after {
+  opacity:1;
+  background:linear-gradient(90deg,rgba(0,212,255,.48),rgba(0,212,255,.08) 5%,transparent 22%),linear-gradient(180deg,rgba(255,255,255,.18),transparent 42%,rgba(0,0,0,.16));
+  animation:face-light 1.9s cubic-bezier(.65,0,.35,1) both
+}

@@ -1,0 +1,47 @@
+/* STAV: NEXT (Uprostřed, velká startovní listina) */
+.obs-panel.state-next {
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%) scale(1);
+  width:min(90vw,1700px);
+  height:min(92vh,980px);
+  max-height:94vh;
+  padding:0 0 12px 0;
+  border-top:8px solid var(--accent);
+  border-radius:8px;
+  background:transparent;
+  box-shadow:none;
+}
+.obs-panel.state-next .panel-header {
+  height:clamp(150px,18vh,194px);
+  padding:18px 36px 16px;
+  flex-direction:column;
+  gap:10px;
+  background:rgba(10,20,30,.99);
+  border-top-left-radius:8px;
+  border-top-right-radius:8px;
+}
+.obs-panel.state-next .main-title {
+  font-size:clamp(26px,2.35vw,45px);
+}
+.obs-panel.state-next .sub-title {
+  font-size:clamp(18px,1.5vw,28px);
+  margin-top:6px;
+  color:var(--accent);
+  font-weight:700;
+}
+.obs-panel.state-next .column-head {
+  position:absolute;
+  z-index:2;
+  top:calc(clamp(150px,18vh,194px) - 39px);
+  margin:0;
+}
+.obs-panel.state-next .row-item {
+  min-height:clamp(52px,7vh,76px);
+  flex-shrink:0;
+}
+.obs-panel.state-next .row-name {
+  text-transform:uppercase;
+  font-size:clamp(17px,1.7vw,32px);
+  font-weight:700
+}

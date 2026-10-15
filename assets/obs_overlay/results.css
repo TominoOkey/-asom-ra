@@ -1,0 +1,81 @@
+/* STAV: RESULTS (Uprostřed, velké výsledky) */
+.obs-panel.state-results {
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%) scale(1);
+  width:min(90vw,1700px);
+  height:min(92vh,980px);
+  max-height:94vh;
+  padding:0 0 12px 0;
+  border-top:10px solid var(--result);
+  border-radius:8px;
+  background:transparent;
+  box-shadow:none;
+}
+.obs-panel.state-results .panel-header {
+  height:clamp(158px,20vh,210px);
+  flex-direction:column;
+  gap:12px;
+  padding:18px 36px 16px;
+  border-bottom-color:var(--result);
+}
+.obs-panel.state-results .panel-header {
+  background:rgba(10,20,30,.99)
+}
+.obs-panel.state-results .main-title {
+  font-size:clamp(32px,3vw,58px);
+  color:#fff;
+}
+.obs-panel.state-results .sub-title {
+  font-size:clamp(18px,1.4vw,28px);
+  margin-top:4px;
+  color:var(--result);
+}
+.obs-panel.state-results .column-head {
+  position:absolute;
+  z-index:2;
+  top:calc(clamp(158px,20vh,210px) - 39px);
+  margin:0;
+}
+.obs-panel.state-results .row-item {
+  min-height:clamp(52px,7vh,76px);
+  flex-shrink:0;
+  background:rgba(7,34,58,.82);
+  border-left-color:var(--result);
+}
+.obs-panel.state-results .row-lane {
+  font-size:clamp(28px,2.2vw,42px);
+}
+.obs-panel.state-results .row-club {
+  font-size:clamp(20px,1.75vw,34px);
+  color:#00ff7f;
+}
+.obs-panel.state-results .row-name {
+  font-size:clamp(22px,1.9vw,36px);
+  font-weight:800
+}
+.obs-panel.state-results .row-entry {
+  font-family:Consolas,"SFMono-Regular",monospace;
+  font-size:clamp(23px,2vw,38px);
+  font-weight:900;
+  color:#fff;
+}
+.result-or {
+  color:var(--result);
+  font-size:.78em;
+  font-weight:900;
+  letter-spacing:.04em;
+  margin-right:10px;
+  white-space:nowrap
+}
+.obs-panel.state-results .row-item {
+  border-left:6px solid var(--result);
+  border-top:0;
+  border-right:0;
+  border-bottom:0;
+  border-radius:8px;
+  background:rgba(15,25,35,.98)
+}
+.obs-panel.state-results .column-head {
+  color:var(--muted)
+}
