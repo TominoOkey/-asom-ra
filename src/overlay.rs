@@ -38,12 +38,16 @@ pub(super) struct OverlayState {
     pub(super) live_enabled: bool,
     pub(super) live: OverlayData,
     pub(super) logos: Vec<String>,
+    pub(super) ad_speed_percent: u8,
+    pub(super) ad_logos_white: bool,
 }
 
 pub(super) fn empty_overlay_state() -> OverlayState {
     OverlayState {
         live_enabled: false,
         logos: Vec::new(),
+        ad_speed_percent: 30,
+        ad_logos_white: false,
         live: OverlayData {
             event_name: String::new(),
             discipline_name: String::new(),

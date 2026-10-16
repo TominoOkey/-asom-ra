@@ -70,7 +70,7 @@ impl eframe::App for App {
             } else {
                 self.results_mode = true;
                 self.results_snapshot = Some(self.overlay_data());
-                self.results_due = Some(Instant::now() + Duration::from_secs(10));
+                self.results_due = Some(Instant::now() + Duration::from_secs(6));
             }
         }
         if let Some(rx) = &self.rx {
@@ -119,6 +119,8 @@ impl eframe::App for App {
             *state = OverlayState {
                 live_enabled: self.show_live,
                 logos: self.obs_logos.clone(),
+                ad_speed_percent: self.ad_speed_percent,
+                ad_logos_white: self.ad_logos_white,
                 live: if self.results_mode {
                     self.results_snapshot
                         .clone()

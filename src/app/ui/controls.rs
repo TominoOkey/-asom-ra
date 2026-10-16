@@ -114,12 +114,35 @@ pub(super) fn show(app: &mut App, ui: &mut egui::Ui) {
             }
         }
         ui.label(format!("Reklam: {}", app.obs_logos.len()));
+        if ui
+            .button(if app.ad_logos_white {
+                "Vrátit barvy log"
+            } else {
+                "Loga bíle"
+            })
+            .on_hover_text("Převést neprůhledné části všech log na bílou barvu")
+            .clicked()
+        {
+            app.ad_logos_white = !app.ad_logos_white;
+            save_ad_logos_white(app.ad_logos_white);
+        }
         ui.label(format!("Logy: {}", app.event_name));
         if ui.button("Obnovit porty").clicked() {
             app.refresh_ports();
         }
     });
     ui.label(&app.status);
+    ui.horizontal(|ui| {
+        let response = ui.add(
+            egui::Slider::new(&mut app.ad_speed_percent, 0..=100)
+                .text("Rychlost log")
+                .suffix("%"),
+        );
+        if response.drag_stopped() || (response.changed() && !response.dragged()) {
+            save_ad_speed_percent(app.ad_speed_percent);
+        }
+        ui.label("0 = stojí · 1–100 = 4–400 s na šířku obrazu");
+    });
     if !app.obs_logos.is_empty() {
         ui.horizontal_wrapped(|ui| {
             ui.label("Pořadí log:");

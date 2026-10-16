@@ -3,6 +3,27 @@ let cubeExitTimer=null;
 let raceClockStartedAt=null;
 let clockAnimationFrame=0;
 let lastLogoKey='';
+let adSpeedPercent=30;
+let adGroupWidth=0;
+
+function setAdSpeed(percent){
+  const parsed=Number(percent);
+  adSpeedPercent=Number.isFinite(parsed)?Math.max(0,Math.min(100,parsed)):30;
+  updateAdTickerSpeed();
+}
+
+function updateAdTickerSpeed(){
+  const track=document.getElementById('adTrack');
+  if(!track||!adGroupWidth)return;
+  if(adSpeedPercent===0){
+    track.style.setProperty('--ad-play-state','paused');
+    return;
+  }
+  const secondsPerScreen=adSpeedPercent*4;
+  const duration=adGroupWidth/Math.max(1,window.innerWidth)*secondsPerScreen;
+  track.style.setProperty('--ad-duration',`${duration}s`);
+  track.style.setProperty('--ad-play-state','running');
+}
 
 function renderAdTicker(logos=[]){
   const key=JSON.stringify(logos);
@@ -12,6 +33,7 @@ function renderAdTicker(logos=[]){
   const track=document.getElementById('adTrack');
   track.style.setProperty('--ad-play-state','paused');
   track.replaceChildren();
+  adGroupWidth=0;
   footer.style.display=logos.length?'flex':'none';
   if(!logos.length)return;
   for(let copy=0;copy<2;copy++){
@@ -38,13 +60,13 @@ function layoutAdTicker(){
   if(!first)return;
   const width=first.getBoundingClientRect().width;
   if(!width)return;
+  adGroupWidth=width;
   while(track.children.length>2)track.lastElementChild.remove();
   while(track.scrollWidth<window.innerWidth+width){
     track.appendChild(first.cloneNode(true));
   }
   track.style.setProperty('--ad-offset',`-${width}px`);
-  track.style.setProperty('--ad-duration',`${Math.max(12,width/65)}s`);
-  track.style.setProperty('--ad-play-state','running');
+  updateAdTickerSpeed();
 }
 
 function clockText(ms){
@@ -91,8 +113,10 @@ function startCubeTransition(panel){
   },1250);
 }
 
-function draw(d,enabled,logos){
+function draw(d,enabled,logos,speed,whiteLogos){
   renderAdTicker(logos||[]);
+  setAdSpeed(speed);
+  document.getElementById('adFooter').classList.toggle('white-logos',Boolean(whiteLogos));
   if(!enabled||!d){document.getElementById('app').style.opacity='0';return;}
   document.getElementById('app').style.opacity='1';
 
@@ -130,7 +154,7 @@ async function refresh(){
     const r=await fetch('/data',{cache:'no-store'});
     const s=await r.json();
     const mode=location.pathname.startsWith('/next')?'next':'live';
-    draw(s[mode],s[mode+'_enabled'],s.logos);
+    draw(s[mode],s[mode+'_enabled'],s.logos,s.ad_speed_percent,s.ad_logos_white);
   }catch(_){document.getElementById('app').style.opacity='0';}
 }
 

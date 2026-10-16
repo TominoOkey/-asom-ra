@@ -43,6 +43,8 @@ pub(super) struct App {
     timer_armed: bool,
     show_live: bool,
     obs_logos: Vec<String>,
+    ad_speed_percent: u8,
+    ad_logos_white: bool,
     results_mode: bool,
     results_due: Option<Instant>,
     results_auto_next: bool,
@@ -118,6 +120,8 @@ impl App {
             timer_armed: false,
             show_live: true,
             obs_logos,
+            ad_speed_percent: load_ad_speed_percent(),
+            ad_logos_white: load_ad_logos_white(),
             results_mode: false,
             results_due: None,
             results_auto_next: false,
@@ -147,6 +151,46 @@ impl App {
             let _ = app.load_race_folder(&folder);
         }
         app
+    }
+}
+
+fn ad_speed_settings_path() -> Option<PathBuf> {
+    std::env::var_os("HOME")
+        .or_else(|| std::env::var_os("USERPROFILE"))
+        .map(PathBuf::from)
+        .map(|home| home.join(".casomira_ad_speed"))
+}
+
+fn load_ad_speed_percent() -> u8 {
+    ad_speed_settings_path()
+        .and_then(|path| std::fs::read_to_string(path).ok())
+        .and_then(|value| value.trim().parse::<u8>().ok())
+        .filter(|value| *value <= 100)
+        .unwrap_or(30)
+}
+
+fn save_ad_speed_percent(value: u8) {
+    if let Some(path) = ad_speed_settings_path() {
+        let _ = std::fs::write(path, value.to_string());
+    }
+}
+
+fn ad_logos_white_settings_path() -> Option<PathBuf> {
+    std::env::var_os("HOME")
+        .or_else(|| std::env::var_os("USERPROFILE"))
+        .map(PathBuf::from)
+        .map(|home| home.join(".casomira_ad_logos_white"))
+}
+
+fn load_ad_logos_white() -> bool {
+    ad_logos_white_settings_path()
+        .and_then(|path| std::fs::read_to_string(path).ok())
+        .is_some_and(|value| value.trim() == "true")
+}
+
+fn save_ad_logos_white(value: bool) {
+    if let Some(path) = ad_logos_white_settings_path() {
+        let _ = std::fs::write(path, value.to_string());
     }
 }
 
