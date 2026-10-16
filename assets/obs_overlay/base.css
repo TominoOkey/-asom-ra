@@ -50,15 +50,15 @@ body {
   backface-visibility:hidden;
   will-change:top,left,width,height,transform,padding,border-radius;
   transition:
-  top 1.55s cubic-bezier(.22,1,.36,1),
-  left 1.55s cubic-bezier(.22,1,.36,1),
-  width 1.55s cubic-bezier(.22,1,.36,1),
-  height 1.55s cubic-bezier(.22,1,.36,1),
-  padding 1.55s cubic-bezier(.22,1,.36,1),
-  border-radius 1.55s cubic-bezier(.22,1,.36,1),
-  border-top-width 1.55s cubic-bezier(.22,1,.36,1),
-  box-shadow 1.55s cubic-bezier(.22,1,.36,1),
-  filter 1.55s cubic-bezier(.22,1,.36,1);
+  top 1.2s cubic-bezier(.22,1,.36,1),
+  left 1.2s cubic-bezier(.22,1,.36,1),
+  width 1.2s cubic-bezier(.22,1,.36,1),
+  height 1.2s cubic-bezier(.22,1,.36,1),
+  padding 1.2s cubic-bezier(.22,1,.36,1),
+  border-radius 1.2s cubic-bezier(.22,1,.36,1),
+  border-top-width 1.2s cubic-bezier(.22,1,.36,1),
+  box-shadow 1.2s cubic-bezier(.22,1,.36,1),
+  filter 1.2s cubic-bezier(.22,1,.36,1);
 }
 .obs-panel::after {
   content:"";
@@ -67,7 +67,7 @@ body {
   inset:0;
   pointer-events:none;
   opacity:0;
-  transition:opacity .45s ease
+  transition:opacity .35s ease
 }
 .obs-panel.cube-out::after {
   opacity:1;
@@ -76,5 +76,5 @@ body {
 .obs-panel.cube-in::after {
   opacity:1;
   background:linear-gradient(90deg,rgba(0,212,255,.48),rgba(0,212,255,.08) 5%,transparent 22%),linear-gradient(180deg,rgba(255,255,255,.18),transparent 42%,rgba(0,0,0,.16));
-  animation:face-light 1.9s cubic-bezier(.65,0,.35,1) both
+  animation:face-light 1.2s cubic-bezier(.65,0,.35,1) both
 }

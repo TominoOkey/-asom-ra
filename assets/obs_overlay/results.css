@@ -1,11 +1,11 @@
 /* STAV: RESULTS (Uprostřed, velké výsledky) */
 .obs-panel.state-results {
-  top:50%;
+  top:calc((100% - 100px)/2);
   left:50%;
   transform:translate(-50%,-50%) scale(1);
   width:min(90vw,1700px);
   height:min(92vh,980px);
-  max-height:94vh;
+  max-height:calc(100vh - 100px);
   padding:0 0 12px 0;
   border-top:10px solid var(--result);
   border-radius:8px;

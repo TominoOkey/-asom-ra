@@ -118,6 +118,7 @@ impl eframe::App for App {
         if let Ok(mut state) = self.overlay_state.write() {
             *state = OverlayState {
                 live_enabled: self.show_live,
+                logos: self.obs_logos.clone(),
                 live: if self.results_mode {
                     self.results_snapshot
                         .clone()

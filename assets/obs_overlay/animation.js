@@ -2,6 +2,50 @@ let currentState=null;
 let cubeExitTimer=null;
 let raceClockStartedAt=null;
 let clockAnimationFrame=0;
+let lastLogoKey='';
+
+function renderAdTicker(logos=[]){
+  const key=JSON.stringify(logos);
+  if(key===lastLogoKey)return;
+  lastLogoKey=key;
+  const footer=document.getElementById('adFooter');
+  const track=document.getElementById('adTrack');
+  track.style.setProperty('--ad-play-state','paused');
+  track.replaceChildren();
+  footer.style.display=logos.length?'flex':'none';
+  if(!logos.length)return;
+  for(let copy=0;copy<2;copy++){
+    const group=document.createElement('div');
+    group.className='ad-group';
+    group.setAttribute('aria-hidden',copy?'true':'false');
+    for(const logo of logos){
+      const img=document.createElement('img');
+      img.className='ad-logo';
+      img.src=`/logos/${encodeURIComponent(logo)}`;
+      img.alt=copy?'':logo.replace(/\.[^.]+$/,'');
+      img.draggable=false;
+      img.addEventListener('load',layoutAdTicker,{once:true});
+      group.appendChild(img);
+    }
+    track.appendChild(group);
+  }
+  requestAnimationFrame(layoutAdTicker);
+}
+
+function layoutAdTicker(){
+  const track=document.getElementById('adTrack');
+  const first=track.firstElementChild;
+  if(!first)return;
+  const width=first.getBoundingClientRect().width;
+  if(!width)return;
+  while(track.children.length>2)track.lastElementChild.remove();
+  while(track.scrollWidth<window.innerWidth+width){
+    track.appendChild(first.cloneNode(true));
+  }
+  track.style.setProperty('--ad-offset',`-${width}px`);
+  track.style.setProperty('--ad-duration',`${Math.max(12,width/65)}s`);
+  track.style.setProperty('--ad-play-state','running');
+}
 
 function clockText(ms){
   const centiseconds=Math.floor(Math.max(0,ms)/10);
@@ -44,10 +88,11 @@ function startCubeTransition(panel){
   cubeExitTimer=setTimeout(()=>{
     outgoing.remove();
     panel.classList.remove('cube-in');
-  },1950);
+  },1250);
 }
 
-function draw(d,enabled){
+function draw(d,enabled,logos){
+  renderAdTicker(logos||[]);
   if(!enabled||!d){document.getElementById('app').style.opacity='0';return;}
   document.getElementById('app').style.opacity='1';
 
@@ -85,7 +130,7 @@ async function refresh(){
     const r=await fetch('/data',{cache:'no-store'});
     const s=await r.json();
     const mode=location.pathname.startsWith('/next')?'next':'live';
-    draw(s[mode],s[mode+'_enabled']);
+    draw(s[mode],s[mode+'_enabled'],s.logos);
   }catch(_){document.getElementById('app').style.opacity='0';}
 }
 

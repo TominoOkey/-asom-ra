@@ -93,7 +93,7 @@
 .clock-bug {
   position:absolute;
   right:3.5%;
-  bottom:4.5%;
+  bottom:calc(100px + 4.5%);
   min-width:440px;
   min-height:68px;
   padding:10px 16px;
@@ -137,4 +137,46 @@
   min-width:8ch;
   text-align:right;
   font-family:Consolas,"SFMono-Regular",monospace;
+}
+.ad-footer {
+  position:absolute;
+  z-index:30;
+  left:0;
+  right:0;
+  bottom:0;
+  height:100px;
+  display:flex;
+  align-items:center;
+  overflow:hidden;
+  background:rgba(5,10,15,.96);
+  border-top:2px solid rgba(0,212,255,.72);
+  box-shadow:0 -8px 28px rgba(0,0,0,.24);
+}
+.ad-viewport { width:100%; overflow:hidden; }
+.ad-track {
+  display:flex;
+  width:max-content;
+  will-change:transform;
+  animation:ad-marquee-right var(--ad-duration,24s) linear infinite;
+  animation-play-state:var(--ad-play-state,paused);
+}
+.ad-group {
+  display:flex;
+  align-items:center;
+  flex-shrink:0;
+  gap:40px;
+  padding:0 40px;
+}
+.ad-logo {
+  display:block;
+  width:auto;
+  height:auto;
+  max-width:260px;
+  max-height:68px;
+  object-fit:contain;
+  flex:0 0 auto;
+}
+@keyframes ad-marquee-right {
+  from { transform:translateX(var(--ad-offset, -50%)); }
+  to { transform:translateX(0); }
 }

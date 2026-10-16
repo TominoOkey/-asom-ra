@@ -67,12 +67,82 @@ pub(super) fn show(app: &mut App, ui: &mut egui::Ui) {
                 }
             }
         }
+        if ui.button("Reklamní loga…").clicked() {
+            if let Some(paths) = rfd::FileDialog::new()
+                .add_filter("Obrázky", &["png", "webp", "jpg", "jpeg", "gif", "svg"])
+                .pick_files()
+            {
+                let dir = crate::overlay::logo_directory();
+                if let Err(error) = std::fs::create_dir_all(&dir) {
+                    app.status = format!("Loga se nepodařilo uložit: {error}");
+                } else {
+                    for path in paths {
+                        let Some(name) = path.file_name().and_then(|name| name.to_str()) else {
+                            continue;
+                        };
+                        let ext = path
+                            .extension()
+                            .and_then(|ext| ext.to_str())
+                            .unwrap_or("")
+                            .to_ascii_lowercase();
+                        if !["png", "webp", "jpg", "jpeg", "gif", "svg"].contains(&ext.as_str()) {
+                            continue;
+                        }
+                        let safe_name: String = name
+                            .chars()
+                            .map(|c| {
+                                if c.is_ascii_alphanumeric() || c == '.' || c == '-' {
+                                    c
+                                } else {
+                                    '-'
+                                }
+                            })
+                            .collect();
+                        let unique_name = format!(
+                            "{}-{safe_name}",
+                            std::time::SystemTime::now()
+                                .duration_since(std::time::UNIX_EPOCH)
+                                .unwrap_or_default()
+                                .as_nanos()
+                        );
+                        match std::fs::copy(&path, dir.join(&unique_name)) {
+                            Ok(_) => app.obs_logos.push(unique_name),
+                            Err(error) => app.status = format!("{}: {error}", path.display()),
+                        }
+                    }
+                }
+            }
+        }
+        ui.label(format!("Reklam: {}", app.obs_logos.len()));
         ui.label(format!("Logy: {}", app.event_name));
         if ui.button("Obnovit porty").clicked() {
             app.refresh_ports();
         }
     });
     ui.label(&app.status);
+    if !app.obs_logos.is_empty() {
+        ui.horizontal_wrapped(|ui| {
+            ui.label("Pořadí log:");
+            let mut remove = None;
+            for (index, logo) in app.obs_logos.iter().enumerate() {
+                let name = logo
+                    .split_once('-')
+                    .map(|(_, name)| name)
+                    .unwrap_or(logo)
+                    .rsplit_once('.')
+                    .map(|(name, _)| name)
+                    .unwrap_or(logo);
+                ui.label(name);
+                if ui.small_button("×").on_hover_text("Odebrat logo").clicked() {
+                    remove = Some(index);
+                }
+            }
+            if let Some(index) = remove {
+                let name = app.obs_logos.remove(index);
+                let _ = std::fs::remove_file(crate::overlay::logo_directory().join(name));
+            }
+        });
+    }
     if let Some(err) = &app.log_error {
         ui.colored_label(egui::Color32::RED, format!("Chyba logu: {err}"));
     }

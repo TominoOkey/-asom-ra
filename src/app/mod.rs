@@ -42,6 +42,7 @@ pub(super) struct App {
     log_error: Option<String>,
     timer_armed: bool,
     show_live: bool,
+    obs_logos: Vec<String>,
     results_mode: bool,
     results_due: Option<Instant>,
     results_auto_next: bool,
@@ -75,6 +76,14 @@ impl App {
     pub(super) fn new() -> Self {
         let overlay_state = Arc::new(RwLock::new(empty_overlay_state()));
         start_overlay_server(Arc::clone(&overlay_state));
+        let mut obs_logos: Vec<String> = std::fs::read_dir(crate::overlay::logo_directory())
+            .ok()
+            .into_iter()
+            .flatten()
+            .filter_map(Result::ok)
+            .filter_map(|entry| entry.file_name().into_string().ok())
+            .collect();
+        obs_logos.sort();
         let mut app = Self {
             race_folder: None,
             race_selected: false,
@@ -108,6 +117,7 @@ impl App {
             discipline_map: BTreeMap::new(),
             timer_armed: false,
             show_live: true,
+            obs_logos,
             results_mode: false,
             results_due: None,
             results_auto_next: false,

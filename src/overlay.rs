@@ -37,11 +37,13 @@ pub(super) struct OverlayData {
 pub(super) struct OverlayState {
     pub(super) live_enabled: bool,
     pub(super) live: OverlayData,
+    pub(super) logos: Vec<String>,
 }
 
 pub(super) fn empty_overlay_state() -> OverlayState {
     OverlayState {
         live_enabled: false,
+        logos: Vec::new(),
         live: OverlayData {
             event_name: String::new(),
             discipline_name: String::new(),
@@ -96,25 +98,82 @@ fn serve_overlay_request(mut stream: TcpStream, state: &Arc<RwLock<OverlayState>
             .ok()
             .and_then(|state| serde_json::to_string(&*state).ok())
             .unwrap_or_else(|| "{}".into());
-        ("200 OK", "application/json; charset=utf-8", data)
+        (
+            "200 OK",
+            "application/json; charset=utf-8",
+            data.into_bytes(),
+        )
+    } else if let Some(filename) = path.strip_prefix("/logos/") {
+        let safe_name = filename.rsplit('/').next().unwrap_or("");
+        let logo_path = logo_directory().join(safe_name);
+        match std::fs::read(&logo_path) {
+            Ok(bytes) if safe_name == filename && !safe_name.is_empty() => {
+                let mime = match logo_path
+                    .extension()
+                    .and_then(|ext| ext.to_str())
+                    .unwrap_or("")
+                    .to_ascii_lowercase()
+                    .as_str()
+                {
+                    "png" => "image/png",
+                    "jpg" | "jpeg" => "image/jpeg",
+                    "webp" => "image/webp",
+                    "gif" => "image/gif",
+                    "svg" => "image/svg+xml",
+                    _ => "application/octet-stream",
+                };
+                ("200 OK", mime, bytes)
+            }
+            _ => (
+                "404 Not Found",
+                "text/plain; charset=utf-8",
+                b"Logo nebylo nalezeno".to_vec(),
+            ),
+        }
     } else if path.starts_with("/live") {
         (
             "200 OK",
             "text/html; charset=utf-8",
-            overlay_document().to_owned(),
+            overlay_document().as_bytes().to_vec(),
         )
     } else {
         (
             "404 Not Found",
             "text/plain; charset=utf-8",
-            "OBS stránka nebyla nalezena. Použijte /live.".to_owned(),
+            "OBS stránka nebyla nalezena. Použijte /live."
+                .as_bytes()
+                .to_vec(),
         )
     };
-    let response = format!(
-        "HTTP/1.1 {status}\r\nContent-Type: {content_type}\r\nContent-Length: {}\r\nCache-Control: no-store\r\nAccess-Control-Allow-Origin: *\r\nConnection: close\r\n\r\n{body}",
+    let header = format!(
+        "HTTP/1.1 {status}\r\nContent-Type: {content_type}\r\nContent-Length: {}\r\nCache-Control: no-store\r\nAccess-Control-Allow-Origin: *\r\nConnection: close\r\n\r\n",
         body.len()
     );
-    let _ = stream.write_all(response.as_bytes());
+    let _ = stream.write_all(header.as_bytes());
+    let _ = stream.write_all(&body);
+}
+
+pub(super) fn logo_directory() -> std::path::PathBuf {
+    let base = if cfg!(target_os = "windows") {
+        std::env::var_os("APPDATA")
+            .map(std::path::PathBuf::from)
+            .unwrap_or_else(std::env::temp_dir)
+    } else if cfg!(target_os = "macos") {
+        std::env::var_os("HOME")
+            .map(std::path::PathBuf::from)
+            .unwrap_or_else(std::env::temp_dir)
+            .join("Library/Application Support")
+    } else {
+        std::env::var_os("XDG_DATA_HOME")
+            .map(std::path::PathBuf::from)
+            .unwrap_or_else(|| {
+                std::env::var_os("HOME")
+                    .map(std::path::PathBuf::from)
+                    .unwrap_or_else(std::env::temp_dir)
+                    .join(".local/share")
+            })
+    };
+    base.join("Casomira").join("obs-logos")
 }
 
 fn overlay_document() -> &'static str {

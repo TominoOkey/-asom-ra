@@ -1,22 +1,22 @@
 .obs-panel.cube-out {
   z-index:24;
   transform-origin:right center;
-  animation:results-face-out 1.9s linear both;
+  animation:results-face-out 1.2s linear both;
   pointer-events:none;
   box-shadow:0 28px 100px rgba(0,0,0,.55)
 }
 .obs-panel.cube-in {
   z-index:23;
   transform-origin:left center;
-  animation:next-face-in 1.9s linear both;
+  animation:next-face-in 1.2s linear both;
   box-shadow:0 28px 100px rgba(0,0,0,.5)
 }
 .obs-panel.cube-in .row-item {
   animation:none
 }
 .obs-panel.cube-out .row-item {
-  animation:face-row-retreat .62s cubic-bezier(.55,0,.9,.45) both;
-  animation-delay:calc(980ms + var(--row-index,0)*18ms)
+  animation:face-row-retreat .4s cubic-bezier(.55,0,.9,.45) both;
+  animation-delay:calc(580ms + var(--row-index,0)*12ms)
 }
 @keyframes results-face-out {
   0% {
